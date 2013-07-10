@@ -1,3 +1,8 @@
+'''
+Created on Jul 8, 2013
+Last version update: Jul 10, 2013
+@author: Johannes [imp] Michel
+'''
 from Tkinter import *
 import Tkinter
 import glob
@@ -6,7 +11,7 @@ import tkFileDialog
 
 class Rename:
     '''
-    The base class for renaming files
+    The class for the actual file renaming
     '''
     
     def __init__(self, name, oldpath, newpath, useStartingNumber, startingNumber, startingNumberDigits, splitStarting, bracketsStarting, endingNumber, endingNumberDigits, splitEnding, bracketsEnding, extensionCase, jpgCase):
@@ -493,4 +498,3 @@ createAdvancedFrame()
 updateAdvanced()
 viewStandardFrame()
 root.mainloop()
-
