@@ -409,7 +409,7 @@ class App():
             bracketsEnding = True
         
         item = Rename(self.getName(), self.oldPathVar.get(), self.newPathVar.get(), STARTING, STARTINGNUMBER, self.getStartingNumberDigits(), splitStarting, bracketsStarting, ENDINGNUMBER, self.getEndingNumberDigits(), splitEnding, bracketsEnding, self.extensionLetters.get(), self.extensionRename.get())
-        batchList.append((item, numberOfFiles))
+        self.batchList.append((item, numberOfFiles))
     
     def clearBatch(self):
         del self.batchList[:]
