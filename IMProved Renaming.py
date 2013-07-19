@@ -2,6 +2,7 @@
 Created on Jul 8, 2013
 Last version update: Jul 12, 2013
 @author: Johannes [imp] Michel
+changed
 '''
 from Tkinter import *
 import Tkinter
