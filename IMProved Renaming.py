@@ -1,8 +1,7 @@
 '''
 Created on Jul 8, 2013
-Last version update: Jul 12, 2013
+Last version update: Jul 30, 2013
 @author: Johannes [imp] Michel
-changed
 '''
 from Tkinter import *
 import Tkinter
@@ -21,6 +20,7 @@ class App():
         self.root.iconbitmap(default="icon.ico")
         self.normalFrame = Frame(self.root)
         self.improvedFrame = Frame(self.root)
+        self.batchFrame = Frame(self.root)
         self.numberFrame = Frame(self.improvedFrame)
         self.startingNumberFrame = LabelFrame(self.numberFrame, text="Starting Number", labelanchor=N)
         self.startingSeperatorFrame = LabelFrame(self.startingNumberFrame, text="Separator", labelanchor=N)
@@ -34,10 +34,11 @@ class App():
         self.egNameVar2 = StringVar()
         self.oldPathVar = StringVar()
         self.newPathVar = StringVar()
-
         self.folderNameVar = IntVar()
         self.extensionLetters = IntVar()
         self.extensionRename = IntVar()
+        self.totalCountVar = StringVar()
+        self.totalCountVar.set("0")
 
         self.startingNumberVar = IntVar()
         self.startingBracketsVar = IntVar()
@@ -67,18 +68,17 @@ class App():
         
 #         the batch
         self.batchList = []
-        
 #         create everything:
         self.nameBox = Entry(self.root, textvariable=self.egNameVar)
         self.createRootFrame()
         self.createStandardFrame()
         self.createAdvancedFrame()
+        self.createBatchFrame()
         self.updateAdvanced()
         self.viewStandardFrame()
         self.updateStandardFrame()
         self.root.mainloop()
         
-
     def select(self):
         if self.frameSelectionVar.get() is 0:
             self.viewStandardFrame()
@@ -122,6 +122,7 @@ class App():
         self.normalFrame.grid(row=4, column=0, columnspan=3)
 
     def updateStandardFrame(self):
+        self.updateBatchFrame()
         self.egNameVar2.set(self.getExampleName())
         self.root.after(1000, self.updateStandardFrame)
 
@@ -199,6 +200,7 @@ class App():
         self.improvedFrame.grid(row=4, column=0, columnspan=3)
     
     def updateAdvanced(self, *args):
+        self.updateBatchFrame()
         if self.startingNumberVar.get() is 0:
             self.startingBracketsCheck.configure(state="disabled")
             self.startingBracketsCheck.update()
@@ -244,6 +246,18 @@ class App():
             self.nameBox.configure(state="normal")
             self.nameBox.update()
         self.egNameVar2.set(self.getExampleName())
+
+    def createBatchFrame(self):
+        name = Label(self.batchFrame, text="Batch items:")
+        name.grid(row=0, column=1, sticky=W)
+        count = Label(self.batchFrame, text="file count:")
+        count.grid(row=0, column=2, sticky=E)
+        
+        totalname = Label(self.batchFrame, text="total file count:  ")
+        totalname.grid(row=9000, column=1, sticky=E)
+        totalcount = Label(self.batchFrame, textvariable=self.totalCountVar)
+        totalcount.grid(row=9000, column=2, sticky=E)
+        
 
     def oldDirectory(self):
         f = tkFileDialog.askdirectory()
@@ -345,8 +359,8 @@ class App():
 
     def renameFiles(self):
         self.addBatchItem()
-        for batch in self.batchList:
-            batch[0].renameFiles()
+        for batchItem in self.batchList:
+            batchItem[0].renameFiles()
         del self.batchList[:]
 
     def addBatchItem(self):
@@ -412,13 +426,28 @@ class App():
             bracketsEnding = True
         
         item = Rename(self.getName(), self.oldPathVar.get(), self.newPathVar.get(), STARTING, STARTINGNUMBER, self.getStartingNumberDigits(), splitStarting, bracketsStarting, ENDINGNUMBER, self.getEndingNumberDigits(), splitEnding, bracketsEnding, self.extensionLetters.get(), self.extensionRename.get())
-        self.batchList.append((item, numberOfFiles))
+        self.batchList.append((item, numberOfFiles, self.getExampleName()))
+    
+    def updateBatchFrame(self):
+        if len(self.batchList) is 0:
+            self.batchFrame.grid_forget()
+        else:
+            self.batchFrame.grid(row=4, column=4)
+            rowCount = 0
+            totalCount = 0
+            for item in self.batchList:
+                rowCount += 1
+                number = Label(self.batchFrame, text=str(rowCount)+")")
+                number.grid(row=rowCount, column=0, sticky=W)
+                label = Label(self.batchFrame, text=item[2])
+                label.grid(row=rowCount, column=1, sticky=W)
+                count = Label(self.batchFrame, text=item[1])
+                count.grid(row=rowCount, column=2, sticky=E)
+                totalCount += item[1]
+            self.totalCountVar.set(str(totalCount))
     
     def clearBatch(self):
         del self.batchList[:]
-
-
-
 
 class Rename:
     '''
@@ -501,5 +530,4 @@ class Rename:
             os.renames(pathAndFilename, self.newpath + '/' + numberedName + '.' + extension)
             self.endingNumber += 1
             self.startingNumber += 1
-
 app = App()
