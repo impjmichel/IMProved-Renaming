@@ -248,6 +248,8 @@ class App():
     def oldDirectory(self):
         f = tkFileDialog.askdirectory()
         self.oldPathVar.set(str(f))
+        if self.newPathVar.get() is "":
+            self.newPathVar.set(str(f))
     def newDirectory(self):
         f = tkFileDialog.askdirectory()
         self.newPathVar.set(str(f))
