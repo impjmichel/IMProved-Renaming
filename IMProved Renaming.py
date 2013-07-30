@@ -90,18 +90,18 @@ class App():
         for c in range(len(frameOptions)):
             Tkinter.Radiobutton(self.root, text=frameOptions[c], variable=self.frameSelectionVar, value=c, command=self.select).grid(row=0, column=c+1, sticky=NW, ipadx=10, ipady=10)
         
-        nameLabel = Label(self.root, text="Name")
+        nameLabel = Label(self.root, text="Name : ")
         nameLabel.grid(row=1, column=0, sticky=E)
         self.nameBox.grid(row=1, column=1, sticky=W)
         
-        fromLabel = Label(self.root, text="From")
+        fromLabel = Label(self.root, text="From : ")
         fromLabel.grid(row=2, column=0, sticky=E)
         fromBox = Entry(self.root, width=50, textvariable=self.oldPathVar)
         fromBox.grid(row=2, column=1, sticky=W, columnspan=2)    
         fromButton = Button(self.root, text="Browse...", command=self.oldDirectory)
         fromButton.grid(row=2, column=2, sticky=E)
         
-        toLabel = Label(self.root, text="To")
+        toLabel = Label(self.root, text="To : ")
         toLabel.grid(row=3, column=0, sticky=E)
         toBox = Entry(self.root, width=50, textvariable=self.newPathVar)
         toBox.grid(row=3, column=1, sticky=W, columnspan=2)    
@@ -258,6 +258,23 @@ class App():
         totalcount = Label(self.batchFrame, textvariable=self.totalCountVar)
         totalcount.grid(row=9000, column=2, sticky=E)
         
+    def updateBatchFrame(self):
+        if len(self.batchList) is 0:
+            self.batchFrame.grid_forget()
+        else:
+            self.batchFrame.grid(row=4, column=4)
+            rowCount = 0
+            totalCount = 0
+            for item in self.batchList:
+                rowCount += 1
+                number = Label(self.batchFrame, text=str(rowCount)+")")
+                number.grid(row=rowCount, column=0, sticky=W)
+                label = Label(self.batchFrame, text=item[2])
+                label.grid(row=rowCount, column=1, sticky=W)
+                count = Label(self.batchFrame, text=item[1])
+                count.grid(row=rowCount, column=2, sticky=E)
+                totalCount += item[1]
+            self.totalCountVar.set(str(totalCount))
 
     def oldDirectory(self):
         f = tkFileDialog.askdirectory()
@@ -355,13 +372,13 @@ class App():
         if self.folderNameVar.get() is 0:
             return self.egNameVar.get()
         else:
-            return max(self.oldPathVar.get().split('/'))
+            return self.oldPathVar.get().split('/')[-1]
 
     def renameFiles(self):
         self.addBatchItem()
         for batchItem in self.batchList:
             batchItem[0].renameFiles()
-        del self.batchList[:]
+        self.clearAll()
 
     def addBatchItem(self):
         numberOfFiles = 0
@@ -427,28 +444,17 @@ class App():
         
         item = Rename(self.getName(), self.oldPathVar.get(), self.newPathVar.get(), STARTING, STARTINGNUMBER, self.getStartingNumberDigits(), splitStarting, bracketsStarting, ENDINGNUMBER, self.getEndingNumberDigits(), splitEnding, bracketsEnding, self.extensionLetters.get(), self.extensionRename.get())
         self.batchList.append((item, numberOfFiles, self.getExampleName()))
-    
-    def updateBatchFrame(self):
-        if len(self.batchList) is 0:
-            self.batchFrame.grid_forget()
-        else:
-            self.batchFrame.grid(row=4, column=4)
-            rowCount = 0
-            totalCount = 0
-            for item in self.batchList:
-                rowCount += 1
-                number = Label(self.batchFrame, text=str(rowCount)+")")
-                number.grid(row=rowCount, column=0, sticky=W)
-                label = Label(self.batchFrame, text=item[2])
-                label.grid(row=rowCount, column=1, sticky=W)
-                count = Label(self.batchFrame, text=item[1])
-                count.grid(row=rowCount, column=2, sticky=E)
-                totalCount += item[1]
-            self.totalCountVar.set(str(totalCount))
+        self.clearAll()
     
     def clearBatch(self):
         del self.batchList[:]
-
+    
+    def clearAll(self):
+        self.egNameVar.set("")
+        self.oldPathVar.set("")
+        self.newPathVar.set("")
+        self.clearBatch()
+        
 class Rename:
     '''
     The class for the actual file renaming
