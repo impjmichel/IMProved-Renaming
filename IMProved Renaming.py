@@ -40,6 +40,12 @@ class App():
         self.totalCountVar = StringVar()
         self.totalCountVar.set("0")
 
+        # current item is X, the total is Z
+        self.currentBatchItemVarX = IntVar()
+        self.currentBatchItemVarZ = IntVar()
+        self.totalProgressVarX = IntVar()
+        self.totalProgressVarZ = IntVar()
+
         self.startingNumberVar = IntVar()
         self.startingBracketsVar = IntVar()
         self.startingBracketsCheck = Checkbutton(self.startingNumberFrame, text="Parenthesis", variable=self.startingBracketsVar, onvalue=1, offvalue=0, command=self.updateAdvanced)
@@ -376,8 +382,13 @@ class App():
 
     def renameFiles(self):
         self.addBatchItem()
+        self.updateBatchFrame()
+        self.totalProgressVarX.set(0)
+        self.totalProgressVarZ.set(self.totalCountVar.get())
         for batchItem in self.batchList:
-            batchItem[0].renameFiles()
+            self.currentBatchItemVarX.set(0)
+            self.currentBatchItemVarZ.set(batchItem[1])
+            batchItem[0].renameFiles(self.currentBatchItemVarX, self.totalProgressVarX)
         self.clearInput()
         self.clearBatch()
 
@@ -476,8 +487,10 @@ class Rename:
         self.extensionCase = extensionCase
         self.jpgCase = jpgCase
     
-    def renameFiles(self):
+    def renameFiles(self, currentBatchItemVar, totalProgressVar):
         for pathAndFilename in glob.iglob(os.path.join(self.oldpath + '/', r'*.*')):
+            currentBatchItemVar.set(currentBatchItemVar.get() + 1)
+            totalProgressVar.set(totalProgressVar.get() + 1)
             if self.useStartingNumber:
                 numberedName = ''
                 if self.bracketsStarting:
@@ -536,4 +549,5 @@ class Rename:
             os.renames(pathAndFilename, self.newpath + '/' + numberedName + '.' + extension)
             self.endingNumber += 1
             self.startingNumber += 1
+
 app = App()
