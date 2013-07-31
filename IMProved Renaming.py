@@ -378,7 +378,8 @@ class App():
         self.addBatchItem()
         for batchItem in self.batchList:
             batchItem[0].renameFiles()
-        self.clearAll()
+        self.clearInput()
+        self.clearBatch()
 
     def addBatchItem(self):
         numberOfFiles = 0
@@ -444,16 +445,15 @@ class App():
         
         item = Rename(self.getName(), self.oldPathVar.get(), self.newPathVar.get(), STARTING, STARTINGNUMBER, self.getStartingNumberDigits(), splitStarting, bracketsStarting, ENDINGNUMBER, self.getEndingNumberDigits(), splitEnding, bracketsEnding, self.extensionLetters.get(), self.extensionRename.get())
         self.batchList.append((item, numberOfFiles, self.getExampleName()))
-        self.clearAll()
+        self.clearInput()
     
     def clearBatch(self):
         del self.batchList[:]
     
-    def clearAll(self):
+    def clearInput(self):
         self.egNameVar.set("")
         self.oldPathVar.set("")
         self.newPathVar.set("")
-        self.clearBatch()
         
 class Rename:
     '''
