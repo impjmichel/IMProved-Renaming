@@ -40,7 +40,7 @@ class App():
         self.totalCountVar = StringVar()
         self.totalCountVar.set("0")
 
-        # current item is X, the total is Z
+        # Progress window variables: current item is X, the total is Z
         self.currentBatchItemVarX = IntVar()
         self.currentBatchItemVarZ = IntVar()
         self.totalProgressVarX = IntVar()
@@ -83,6 +83,7 @@ class App():
         self.updateAdvanced()
         self.viewStandardFrame()
         self.updateStandardFrame()
+        self.root.resizable(False, False)
         self.root.mainloop()
         
     def select(self):
@@ -383,6 +384,7 @@ class App():
     def renameFiles(self):
         self.addBatchItem()
         self.updateBatchFrame()
+        self.createProgressWindow()
         self.totalProgressVarX.set(0)
         self.totalProgressVarZ.set(self.totalCountVar.get())
         for batchItem in self.batchList:
@@ -465,6 +467,24 @@ class App():
         self.egNameVar.set("")
         self.oldPathVar.set("")
         self.newPathVar.set("")
+        
+    def createProgressWindow(self):
+        self.progWin = Tk()
+        self.progWin.focus_force()
+        self.progWin.title("Progress")
+        self.progWin.iconbitmap(default="icon.ico")
+        label = Label(self.progWin, text="")
+        label.grid(row=0, column=0)
+        bLabel = Label(self.progWin, text="All files renamed, unless an error occurred,")
+        bLabel.grid(row=1, column=0, sticky=W, ipadx=20)
+        bLabel = Label(self.progWin, text="then you might want to check the log file.")
+        bLabel.grid(row=2, column=0, sticky=W, ipadx=20)
+        okButton = Button(self.progWin, text="  Ok  ", command=self.closeProgWin)
+        okButton.grid(row=3, column=0)
+        self.progWin.resizable(False, False)
+        
+    def closeProgWin(self):
+        self.progWin.destroy()
         
 class Rename:
     '''
