@@ -260,7 +260,7 @@ class App():
         count = Label(self.batchFrame, text="file count:")
         count.grid(row=0, column=2, sticky=E)
         
-        totalname = Label(self.batchFrame, text="total file count:  ")
+        totalname = Label(self.batchFrame, text="total file count: ")
         totalname.grid(row=9000, column=1, sticky=E)
         totalcount = Label(self.batchFrame, textvariable=self.totalCountVar)
         totalcount.grid(row=9000, column=2, sticky=E)
@@ -268,7 +268,9 @@ class App():
     def updateBatchFrame(self):
         if len(self.batchList) is 0:
             self.batchFrame.grid_forget()
+            self.batchFrame = Frame(self.root)
         else:
+            self.createBatchFrame()
             self.batchFrame.grid(row=4, column=4)
             rowCount = 0
             totalCount = 0
