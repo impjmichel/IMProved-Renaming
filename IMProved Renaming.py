@@ -1,6 +1,6 @@
 '''
 Created on Jul 8, 2013
-Last version update: Jul 30, 2013
+Last version update: Aug 2, 2013
 @author: Johannes [imp] Michel
 '''
 from Tkinter import *
@@ -400,11 +400,10 @@ class App():
         numberOfFiles = 0
         for pathAndFilename in glob.iglob(os.path.join(self.oldPathVar.get() + '/', r'*.*')):
             numberOfFiles += 1
-            
+        
+        STARTING = True
         if self.startingNumberVar.get() is 0:
             STARTING = False
-        else:
-            STARTING = True
             
         if self.startingNumberStartVar.get() is 0:
             STARTINGNUMBER = 1
@@ -426,11 +425,10 @@ class App():
             splitStarting = '_'
         elif self.startingSeperatorVar.get() is 4:
             splitStarting = ' - '
-            
+        
+        bracketsStarting = True
         if self.startingBracketsVar.get() is 0:
             bracketsStarting = False
-        else:
-            bracketsStarting = True
         
         if self.endingNumberStartVar.get() is 0:
             ENDINGNUMBER = 1
@@ -453,10 +451,9 @@ class App():
         elif self.endingSeperatorVar.get() is 4:
             splitEnding = ' - '
             
+        bracketsEnding = True
         if self.endingBracketsVar.get() is 0:
             bracketsEnding = False
-        else:
-            bracketsEnding = True
         
         item = Rename(self.getName(), self.oldPathVar.get(), self.newPathVar.get(), STARTING, STARTINGNUMBER, self.getStartingNumberDigits(), splitStarting, bracketsStarting, ENDINGNUMBER, self.getEndingNumberDigits(), splitEnding, bracketsEnding, self.extensionLetters.get(), self.extensionRename.get())
         self.batchList.append((item, numberOfFiles, self.getExampleName()))
